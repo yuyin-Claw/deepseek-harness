@@ -28,6 +28,12 @@
     },
     {
       "path": "../ui-conversation"
+    },
+    {
+      "path": "../../settings/settings"
+    },
+    {
+      "path": "../../../vendor/schemastery"
     }
   ]
 }

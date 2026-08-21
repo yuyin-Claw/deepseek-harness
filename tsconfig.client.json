@@ -98,6 +98,7 @@
     { "path": "./packages/client/ui-theme" },
     { "path": "./packages/client/ui-settings" },
     { "path": "./packages/client/ui-settings-general" },
+    { "path": "./packages/settings/settings-file" },
     { "path": "./packages/client/ui-settings-models" },
     { "path": "./packages/client/ui-settings-plugin-inventory" },
     { "path": "./packages/client/locale" },

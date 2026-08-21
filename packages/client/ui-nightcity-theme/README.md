@@ -1,6 +1,6 @@
 # @deepseek-ai/dsh-client-ui-nightcity-theme
 
-Nightcity cyberpunk skin for the DSH web client: one override stylesheet over the base palette (signature dark neon behind `body[data-ds-dark-theme]`, a pale-lavender counterpart on `:root`), plus a decorative frame-wide atmosphere (skyline silhouette, perspective grid, corner HUD brackets, scanline sweep) registered into `shell.overlay`.
+Nightcity cyberpunk skin for the DSH web client: one override stylesheet over the base palette (signature dark neon behind `body[data-ds-dark-theme]`, a pale-lavender counterpart on `body` — the same selectors the shipped palettes use, so the override wins by document order in both schemes), plus a decorative frame-wide atmosphere (skyline silhouette, perspective grid, corner HUD brackets, scanline sweep) registered into `shell.overlay`.
 
 ## How it mounts
 

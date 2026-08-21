@@ -45,7 +45,7 @@ describe('nightcity theme plugin', () => {
 
     const sheet = document.getElementById(SHEET_ID)
     expect(sheet?.textContent).toBe(nightcityStylesheet(NIGHTCITY_TOKENS))
-    expect(sheet?.textContent).toContain(':root {')
+    expect(sheet?.textContent).toContain('body {')
     expect(sheet?.textContent).toContain('body[data-ds-dark-theme] {')
 
     await fiber.dispose()
