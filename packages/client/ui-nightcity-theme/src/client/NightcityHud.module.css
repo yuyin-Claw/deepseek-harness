@@ -1,0 +1,118 @@
+/* Nightcity atmosphere layer. All effects are decorative and disabled under
+   prefers-reduced-motion. Colors are literal: the layer has no themed
+   counterpart in the alias tokens. */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Skyline silhouette: stacked gradients fake distant towers along the bottom. */
+.skyline {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 26vh;
+  opacity: 0.5;
+  background:
+    linear-gradient(to top, rgba(255, 43, 214, 0.10), transparent 70%),
+    repeating-linear-gradient(
+      to right,
+      transparent 0 26px,
+      rgba(0, 240, 255, 0.05) 26px 30px,
+      transparent 30px 64px,
+      rgba(255, 43, 214, 0.06) 64px 70px,
+      transparent 70px 120px
+    ),
+    linear-gradient(to top, rgba(11, 7, 20, 0.9), transparent);
+}
+
+/* Perspective grid floor. */
+.grid {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 18vh;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform: perspective(420px) rotateX(58deg) scale(2.1);
+  transform-origin: bottom;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent 75%);
+}
+
+/* Corner HUD brackets. */
+.bracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(0, 240, 255, 0.5);
+}
+
+.tl {
+  top: 10px;
+  left: 10px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.tr {
+  top: 10px;
+  right: 10px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.bl {
+  bottom: 10px;
+  left: 10px;
+  border-right: none;
+  border-top: none;
+}
+
+.br {
+  bottom: 10px;
+  right: 10px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Slow scanline sweep. */
+.scanline {
+  position: absolute;
+  inset: -100% 0 auto 0;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 240, 255, 0.05),
+    transparent
+  );
+  animation: nc-sweep 9s linear infinite;
+}
+
+@keyframes nc-sweep {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(calc(100vh + 240px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skyline,
+  .grid,
+  .bracket {
+    display: none;
+  }
+
+  .scanline {
+    animation: none;
+    display: none;
+  }
+}
