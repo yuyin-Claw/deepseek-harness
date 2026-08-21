@@ -1,13 +1,13 @@
 /**
  * Persona plate for the composer dock: a compact portrait plus nameplate
- * that follows the input phase. The user side renders the user-supplied CG
- * portrait artwork (inlined); the operator side keeps an SVG placeholder on
- * the same phase mapping.
+ * that follows the input phase. Both sides render the user-supplied CG
+ * portrait artwork (inlined); the phase mapping stays independent of the art.
  */
 import type { ReactElement } from 'react'
 import clsx from 'clsx'
 import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import { USER_PORTRAIT_DATA_URL } from './user-portrait.ts'
+import { OPERATOR_PORTRAIT_DATA_URL } from './operator-portrait.ts'
 import css from './PersonaPlate.module.css'
 
 /** Persona plate props: runtime share (InputZone owner) and the locale seat. */
@@ -58,13 +58,15 @@ function UserPortrait(): ReactElement {
   )
 }
 
-/** Operator portrait: angular silhouette, magenta optic. */
+/** Operator (assistant) portrait: the user-supplied CG artwork, same cover-fit frame. */
 function OperatorPortrait(): ReactElement {
   return (
-    <svg className={css.portrait} width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" fill="#2a1030" />
-      <path d="M7 19l5-8 5 8z" fill="#ff2bd6" fillOpacity="0.8" />
-      <circle cx="12" cy="8" r="1.6" fill="#ff2bd6" />
-    </svg>
+    <img
+      className={css.portrait}
+      src={OPERATOR_PORTRAIT_DATA_URL}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+    />
   )
 }

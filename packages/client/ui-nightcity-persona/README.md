@@ -1,6 +1,6 @@
 # @deepseek-ai/dsh-client-ui-nightcity-persona
 
-Nightcity persona plate: a composer-dock row showing the persona whose turn it is — the netrunner while the input phase is `plain`, the operator while a submission is in flight. The user side shows the user-supplied CG portrait artwork (inlined as a data URL); the operator side keeps a placeholder until its art is supplied.
+Nightcity persona plate: a composer-dock row showing the persona whose turn it is — the netrunner while the input phase is `plain`, the operator while a submission is in flight. Both sides show the user-supplied CG portrait artwork (inlined as data URLs): the user portrait while the input phase is `plain`, the operator (assistant) portrait while a submission is in flight.
 
 ## How it mounts
 

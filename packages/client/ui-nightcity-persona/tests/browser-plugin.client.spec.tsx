@@ -74,13 +74,14 @@ describe('nightcity persona plugin', () => {
     const plain = render(<LPersonaPlate t={t} input={{ phase: 'plain' }} />)
     expect(plain.container.textContent).toContain(zh['persona.netrunner.name'])
     // The user side renders the real CG portrait, cover-fit in the plate frame.
-    const portrait = plain.container.querySelector('img')
-    expect(portrait?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
-    expect(portrait?.getAttribute('aria-hidden')).toBe('true')
+    const userPortrait = plain.container.querySelector('img')
+    expect(userPortrait?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
+    expect(userPortrait?.getAttribute('aria-hidden')).toBe('true')
 
     const busy = render(<LPersonaPlate t={t} input={{ phase: 'submitting' }} />)
     expect(busy.container.textContent).toContain(zh['persona.operator.name'])
-    // The operator side keeps the SVG placeholder until its art is supplied.
-    expect(busy.container.querySelector('svg')).not.toBeNull()
+    // The operator side renders its own supplied CG portrait.
+    const operatorPortrait = busy.container.querySelector('img')
+    expect(operatorPortrait?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
   })
 })
