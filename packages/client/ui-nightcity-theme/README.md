@@ -1,10 +1,10 @@
 # @deepseek-ai/dsh-client-ui-nightcity-theme
 
-Nightcity cyberpunk skin for the DSH web client: one scheme-invariant token override layer over the active base theme, plus a decorative frame-wide atmosphere (skyline silhouette, perspective grid, corner HUD brackets, scanline sweep) registered into `shell.overlay`.
+Nightcity cyberpunk skin for the DSH web client: one override stylesheet over the base palette (signature dark neon behind `body[data-ds-dark-theme]`, a pale-lavender counterpart on `:root`), plus a decorative frame-wide atmosphere (skyline silhouette, perspective grid, corner HUD brackets, scanline sweep) registered into `shell.overlay`.
 
 ## How it mounts
 
-- `ctx.theme.overrideTokens('ui-nightcity-theme', NIGHTCITY_TOKENS)` — an override layer, not a selectable theme id, so the settings-scope adoption that governs selectable preferences never reverts the skin, and both base palettes receive the same dark neon values.
+- The stylesheet carries both scheme values behind the base palette's own `body[data-ds-dark-theme]` activation attribute, so the Appearance switch and any attribute-level activation flip the skin through the ordinary cascade — no inline variables pin one scheme, and the settings-scope adoption that governs selectable theme ids is never involved.
 - A `shell.overlay` entry (`nightcity-hud`, order −100) renders the atmosphere; all animation is disabled under `prefers-reduced-motion`.
 
 ## Model Experience

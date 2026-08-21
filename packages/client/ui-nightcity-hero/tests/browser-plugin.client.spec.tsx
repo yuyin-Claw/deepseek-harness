@@ -5,7 +5,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
 import { apply, inject } from '../src/client/index.ts'
-import { NightcityBrandMark } from '../src/client/NightcityBrandMark.tsx'
 import { TypewriterDock } from '../src/client/TypewriterDock.tsx'
 import { playBootChime } from '../src/client/chime.ts'
 import { zh } from '../src/client/locales.ts'
@@ -41,7 +40,6 @@ async function bench(declare = true) {
   const declareHoles = () => slots.register({
     name: 'root',
     children: {
-      'conversation.hero.brand.mark': { kind: 'single', scope: 'root' },
       'conversation.input.dock': { kind: 'list', scope: 'session' },
     },
   } as never, () => null)
@@ -55,7 +53,6 @@ const loose = <P,>(component: LooseComponent<P>) => component as unknown as (pro
 
 const LTypewriterDock = loose(TypewriterDock)
 
-const LNightcityBrandMark = loose(NightcityBrandMark)
 
 describe('nightcity hero plugin', () => {
   beforeEach(() => {
@@ -80,7 +77,6 @@ describe('nightcity hero plugin', () => {
     expect(subject.locale.registered).toEqual([
       { ns: 'nightcity-hero', dictionaries: { zh, en: expect.any(Object) } },
     ])
-    expect(subject.slots.entries('conversation.hero.brand.mark')).toHaveLength(1)
     expect(subject.slots.entries('conversation.input.dock').map(e => e.options.id)).toContain('nightcity-typewriter')
 
     await fiber.dispose()
@@ -94,16 +90,8 @@ describe('nightcity hero plugin', () => {
     expect(after.slots.entries('conversation.hero.brand.mark')).toHaveLength(0)
     after.declareHoles()
     await Promise.resolve()
-    expect(after.slots.entries('conversation.hero.brand.mark')).toHaveLength(1)
   })
 
-  it('renders the skyline mark at the requested size', () => {
-    const view = render(<LNightcityBrandMark size={34} className="hero" />)
-    const svg = view.container.querySelector('svg')
-    expect(svg?.getAttribute('width')).toBe('34')
-    expect(svg?.getAttribute('class')).toBe('hero')
-    expect(svg?.querySelectorAll('path, rect').length).toBeGreaterThanOrEqual(2)
-  })
 
   it('plays the chime once on the first pointer gesture', async () => {
     const subject = await bench()
@@ -226,5 +214,19 @@ describe('nightcity hero coverage companions', () => {
       close() { return Promise.reject(new Error('already closed')) }
     })
     expect(() => { playBootChime() }).not.toThrow()
+  })
+})
+
+describe('nightcity hero without matchMedia', () => {
+  afterEach(() => {
+    cleanup()
+    vi.unstubAllGlobals()
+  })
+
+  it('renders the full suggestion when the media API is absent', () => {
+    vi.stubGlobal('matchMedia', undefined)
+    const t = (key: string): string => zh[key as keyof typeof zh]
+    const view = render(<LTypewriterDock t={t} />)
+    expect(view.container.querySelectorAll('span')[1]?.textContent).toBe(zh['suggestion.0'])
   })
 })

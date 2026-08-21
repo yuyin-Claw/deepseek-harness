@@ -41,24 +41,34 @@ export function TypewriterDock(props: TypewriterDockProps): ReactElement | null 
   }, [reduced, done, chars, line])
 
   return (
-    <p className={css.root} aria-live="off">
-      <span className={css.label}>{props.t('typewriter.label')}</span>
-      <span className={css.text}>{reduced ? text : text.slice(0, chars)}</span>
-      {!reduced && <span className={done ? css.caret + ' ' + css.caretBlink : css.caret} />}
+    <p className={css.root} aria-label={`${props.t('typewriter.label')} ${text}`}>
+      {/*
+        The animated partial and caret ride aria-hidden: mid-typing excerpts
+        are timing-dependent and must stay out of the accessible tree the
+        e2e goldens capture; the full line rides the paragraph's label.
+      */}
+      <span className={css.label} aria-hidden="true">{props.t('typewriter.label')}</span>
+      <span className={css.text} aria-hidden="true">{reduced ? text : text.slice(0, chars)}</span>
+      {!reduced && <span className={done ? css.caret + ' ' + css.caretBlink : css.caret} aria-hidden="true" />}
     </p>
   )
 }
 
 /** Media-query hook for the reduced-motion posture (component-internal state only). */
 function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
+  const readQuery = (): MediaQueryList | undefined =>
+    typeof window.matchMedia === 'function'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : undefined
+  const [query] = useState(readQuery)
+  // A missing media API degrades to the reduced posture: the full line
+  // renders statically instead of animating in an unknown environment.
+  const [reduced, setReduced] = useState(() => query?.matches !== false)
   useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (query === undefined) return
     const onChange = (): void => { setReduced(query.matches) }
     query.addEventListener('change', onChange)
     return () => query.removeEventListener('change', onChange)
-  }, [])
+  }, [query])
   return reduced
 }

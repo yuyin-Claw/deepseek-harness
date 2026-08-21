@@ -10,7 +10,6 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 // input dock) and the locale Context merge.
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
 import type {} from '@deepseek-ai/dsh-client-locale/client'
-import { NightcityBrandMark } from './NightcityBrandMark.tsx'
 import { TypewriterDock } from './TypewriterDock.tsx'
 import { playBootChime } from './chime.ts'
 import { en, zh, type NightcityHeroKey } from './locales.ts'
@@ -36,10 +35,6 @@ export const inject = ['slots', 'locale']
  */
 export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NIGHTCITY_HERO_NS, { zh, en }), 'ui-nightcity-hero: landing dictionaries')
-  ctx.slots.inject('conversation.hero.brand.mark', () => ctx.slots.register({
-    name: 'conversation.hero.brand.mark',
-    priority: -1,
-  }, NightcityBrandMark))
   ctx.slots.inject('conversation.input.dock', () => ctx.slots.register({
     name: 'conversation.input.dock',
     id: 'nightcity-typewriter',

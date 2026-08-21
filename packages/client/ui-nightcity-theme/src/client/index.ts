@@ -1,31 +1,37 @@
 /**
- * Browser half of the nightcity theme plugin: one token override layer over
- * whatever base theme is active (the skin is dark-only and scheme-invariant,
- * so it stays legible under both base palettes and is never touched by the
- * settings-scope adoption that governs selectable theme ids) plus the
- * decorative atmosphere entry in the frame-wide shell overlay.
+ * Browser half of the nightcity theme plugin: one stylesheet over the base
+ * palette — the light overrides on `:root`, the dark overrides behind the
+ * same `body[data-ds-dark-theme]` attribute the base palette uses, so the
+ * Appearance switch and any attribute-level activation flip the skin with
+ * the ordinary CSS cascade (no inline variables that could pin one scheme).
+ * The decorative atmosphere entry rides the shell overlay.
  */
 import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
-// Type-only: pulls the theme service Context merge (ctx.theme).
-import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 // Type-only: pulls ui-layout's 'shell.overlay' slot declaration.
 import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
 import { NightcityHud } from './NightcityHud.tsx'
 import { NIGHTCITY_TOKENS } from './tokens.ts'
+import { nightcityStylesheet } from './stylesheet.ts'
 
-/** Required services: the theme registry and the slot registry. */
-export const inject = ['theme', 'slots']
+/** Required service: the slot registry (the skin itself is plain CSS). */
+export const inject = ['slots']
 
-/** Override-layer source identity (one layer per source). */
-const OVERRIDE_SOURCE = 'ui-nightcity-theme'
+/** Style element id — one sheet per document, replaced on re-registration. */
+const STYLE_ELEMENT_ID = 'nightcity-theme-override'
 
 /**
- * Client plugin body: stack the nightcity token layer and register the
+ * Client plugin body: install the override stylesheet and register the
  * atmosphere overlay.
  * @param ctx - client root context.
  */
 export function apply(ctx: ClientContext): void {
-  ctx.effect(() => ctx.theme.overrideTokens(OVERRIDE_SOURCE, NIGHTCITY_TOKENS), 'ui-nightcity-theme: token override layer')
+  ctx.effect(() => {
+    const sheet = document.createElement('style')
+    sheet.id = STYLE_ELEMENT_ID
+    sheet.textContent = nightcityStylesheet(NIGHTCITY_TOKENS)
+    document.head.append(sheet)
+    return () => { sheet.remove() }
+  }, 'ui-nightcity-theme: override stylesheet')
   ctx.slots.inject('shell.overlay', () => ctx.slots.register({
     name: 'shell.overlay',
     id: 'nightcity-hud',

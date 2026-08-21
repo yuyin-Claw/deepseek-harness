@@ -10,6 +10,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: Explain event sourcing in one sentence. {{clock}}
 - button "Copy":
@@ -20,9 +22,12 @@
   - text: Context injection @deepseek-ai/dsh-system-prompt
 - paragraph: partial
 - status: Deep diving...
+- paragraph
 - textbox "Parent session offline; sending is unavailable but you can still stop the run" [disabled]
 - button "Commands" [disabled]:
   - img
 - 'button "Access mode, current: Custom" [disabled]': Custom
+- button "Voice input"
 - button "Stop generating"
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by

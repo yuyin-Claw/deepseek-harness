@@ -13,6 +13,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: Explain event sourcing in one sentence. {{clock}}
 - button "Copy":
@@ -51,10 +53,13 @@
 - button "Branch into a new conversation":
   - img
 - text: {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Custom"': Custom
+- button "Voice input"
 - button "6% of context used"
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 2 turns · 2 steps LLM {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 99% Input 15.6K tok · Output 158 tok

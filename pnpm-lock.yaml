@@ -2335,10 +2335,6 @@ importers:
         version: 18.3.1
 
   packages/client/ui-nightcity-debate:
-    dependencies:
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -2366,10 +2362,6 @@ importers:
         version: 18.3.1
 
   packages/client/ui-nightcity-hero:
-    dependencies:
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -2397,10 +2389,6 @@ importers:
         version: 18.3.1
 
   packages/client/ui-nightcity-offpeak:
-    dependencies:
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -2465,10 +2453,6 @@ importers:
         version: 18.3.1
 
   packages/client/ui-nightcity-theme:
-    dependencies:
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^

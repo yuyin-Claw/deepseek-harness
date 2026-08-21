@@ -1,74 +1,55 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
-import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
+import type { ReactElement } from 'react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
-import type { ThemeTokenOverrides } from '@deepseek-ai/dsh-client-ui-theme/client'
 import { apply, inject } from '../src/client/index.ts'
 import { NightcityHud } from '../src/client/NightcityHud.tsx'
+import { nightcityStylesheet } from '../src/client/stylesheet.ts'
 import { NIGHTCITY_TOKENS } from '../src/client/tokens.ts'
-
-/** Loose component wrapper: feeds partial props without widening the component's own props type. */
-type LooseComponent<P> = (props: P) => ReactElement | null
-const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
 })
 
-/** Minimal theme service stand-in: records the one override-layer call. */
-function fakeTheme() {
-  const calls: Array<{ source: string; tokens: ThemeTokenOverrides }> = []
-  let disposed = false
-  return {
-    calls,
-    isDisposed: () => disposed,
-    service: {
-      overrideTokens(source: string, tokens: ThemeTokenOverrides): () => void {
-        calls.push({ source, tokens })
-        disposed = false
-        return () => { disposed = true }
-      },
-    },
-  }
-}
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
+
+const LNightcityHud = loose(NightcityHud)
 
 async function bench(declare = true) {
   const ctx = new Context()
   await ctx.plugin(SlotRegistry).await()
   const slots = ctx.get('slots') as SlotRegistry
-  const theme = fakeTheme()
-  ctx.reflect.provide('theme', theme.service)
   const declareHoles = () => slots.register({
     name: 'root',
     children: { 'shell.overlay': { kind: 'list', scope: 'root' } },
   } as never, () => null)
   const disposeHoles = declare ? declareHoles() : undefined
-  return { ctx, slots, theme, declareHoles, disposeHoles }
+  return { ctx, slots, declareHoles, disposeHoles }
 }
 
-const LNightcityHud = loose(NightcityHud)
+const SHEET_ID = 'nightcity-theme-override'
 
 describe('nightcity theme plugin', () => {
-  it('declares only the services it uses', () => {
-    expect(inject).toEqual(['theme', 'slots'])
+  it('declares only the slot service (the skin is plain CSS)', () => {
+    expect(inject).toEqual(['slots'])
   })
 
-  it('stacks one override layer and disposes it with the fiber', async () => {
+  it('installs one stylesheet with both schemes and removes it with the fiber', async () => {
     const subject = await bench()
     const fiber = subject.ctx.plugin({ inject: [...inject], apply })
     await fiber.await()
 
-    expect(subject.theme.calls).toHaveLength(1)
-    expect(subject.theme.calls[0]?.source).toBe('ui-nightcity-theme')
-    expect(subject.theme.calls[0]?.tokens).toBe(NIGHTCITY_TOKENS)
-    for (const modes of Object.values(NIGHTCITY_TOKENS)) {
-      expect(modes.light).toBe(modes.dark)
-    }
+    const sheet = document.getElementById(SHEET_ID)
+    expect(sheet?.textContent).toBe(nightcityStylesheet(NIGHTCITY_TOKENS))
+    expect(sheet?.textContent).toContain(':root {')
+    expect(sheet?.textContent).toContain('body[data-ds-dark-theme] {')
 
     await fiber.dispose()
-    expect(subject.theme.isDisposed()).toBe(true)
+    expect(document.getElementById(SHEET_ID)).toBeNull()
   })
 
   it('adds the hud overlay entry and removes it with the fiber', async () => {
@@ -93,5 +74,18 @@ describe('nightcity theme plugin', () => {
     const layer = view.container.firstElementChild as HTMLElement
     expect(layer.getAttribute('aria-hidden')).toBe('true')
     expect(layer.childElementCount).toBe(7)
+  })
+})
+
+describe('nightcity stylesheet', () => {
+  it('carries both scheme values for every token', () => {
+    const sheet = nightcityStylesheet(NIGHTCITY_TOKENS)
+    for (const [name, modes] of Object.entries(NIGHTCITY_TOKENS)) {
+      expect(sheet).toContain(`${name}: ${modes.light};`)
+      expect(sheet).toContain(`${name}: ${modes.dark};`)
+    }
+    // The base token must flip between schemes so the attribute cascade moves it.
+    expect(NIGHTCITY_TOKENS['--dsw-alias-bg-base']?.light)
+      .not.toBe(NIGHTCITY_TOKENS['--dsw-alias-bg-base']?.dark)
   })
 })

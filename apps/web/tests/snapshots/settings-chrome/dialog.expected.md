@@ -43,3 +43,6 @@
   - button "排队发送":
     - text: 排队发送
     - img
+  - heading "错峰执行" [level=4]
+  - switch "已关闭"
+  - paragraph: 高峰时段（北京时间 9–12 点、14–18 点）暂缓新任务，低峰自动恢复
