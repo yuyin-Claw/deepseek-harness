@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -7,6 +8,10 @@ import type { ThemeTokenOverrides } from '@deepseek-ai/dsh-client-ui-theme/clien
 import { apply, inject } from '../src/client/index.ts'
 import { NightcityHud } from '../src/client/NightcityHud.tsx'
 import { NIGHTCITY_TOKENS } from '../src/client/tokens.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -42,6 +47,8 @@ async function bench(declare = true) {
   const disposeHoles = declare ? declareHoles() : undefined
   return { ctx, slots, theme, declareHoles, disposeHoles }
 }
+
+const LNightcityHud = loose(NightcityHud)
 
 describe('nightcity theme plugin', () => {
   it('declares only the services it uses', () => {
@@ -82,7 +89,7 @@ describe('nightcity theme plugin', () => {
   })
 
   it('renders the atmosphere as one aria-hidden layer', () => {
-    const view = render(<NightcityHud {...({} as never)} />)
+    const view = render(<LNightcityHud />)
     const layer = view.container.firstElementChild as HTMLElement
     expect(layer.getAttribute('aria-hidden')).toBe('true')
     expect(layer.childElementCount).toBe(7)

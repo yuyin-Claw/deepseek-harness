@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -8,6 +9,10 @@ import { VoiceMicButton } from '../src/client/VoiceMicButton.tsx'
 import { finalTranscript, speechRecognitionCtor } from '../src/client/speech.ts'
 import { zh } from '../src/client/locales.ts'
 import type { NightcitySpeechEvent } from '../src/client/speech.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -50,6 +55,8 @@ function eventOf(transcript: string, isFinal = true): NightcitySpeechEvent {
   }
 }
 
+const LVoiceMicButton = loose(VoiceMicButton)
+
 describe('nightcity voice plugin', () => {
   it('declares only the services it uses', () => {
     expect(inject).toEqual(['slots', 'locale'])
@@ -85,7 +92,7 @@ describe('nightcity voice plugin', () => {
   })
 
   it('renders nothing without the API', () => {
-    const view = render(<VoiceMicButton t={key => zh[key]} {...({} as never)} />)
+    const view = render(<LVoiceMicButton t={(key: string) => zh[key as keyof typeof zh]} />)
     expect(view.container.firstElementChild).toBeNull()
   })
 
@@ -108,7 +115,7 @@ describe('nightcity voice plugin', () => {
       input: { draft: '已有草稿' },
       inputActions: { setDraft },
     }
-    const view = render(<VoiceMicButton {...props} {...({} as never)} />)
+    const view = render(<LVoiceMicButton {...props} />)
     const button = view.getByRole('button')
     expect(button.getAttribute('aria-pressed')).toBe('false')
     await act(async () => { button.click() })
@@ -142,7 +149,7 @@ describe('nightcity voice error paths', () => {
       }
     })
     const props = { t: (key: string) => key, input: { draft: '' }, inputActions: { setDraft: vi.fn() } }
-    const view = render(<VoiceMicButton {...props} {...({} as never)} />)
+    const view = render(<LVoiceMicButton {...props} />)
     const button = view.getByRole('button')
     await act(async () => { button.click() })
     expect(button.getAttribute('aria-pressed')).toBe('true')
@@ -163,7 +170,7 @@ describe('nightcity voice error paths', () => {
       }
     })
     const props = { t: (key: string) => key, input: { draft: '' }, inputActions: { setDraft: vi.fn() } }
-    const view = render(<VoiceMicButton {...props} {...({} as never)} />)
+    const view = render(<LVoiceMicButton {...props} />)
     const button = view.getByRole('button')
     await act(async () => { button.click() })
     expect(button.getAttribute('aria-pressed')).toBe('true')
@@ -188,7 +195,7 @@ describe('nightcity voice transcript guards', () => {
     })
     const setDraft = vi.fn()
     const view = render(
-      <VoiceMicButton t={key => key} input={{ draft: '' }} {...({} as never)} />,
+      <LVoiceMicButton t={(key: string) => key} input={{ draft: '' }} />,
     )
     await act(async () => { view.getByRole('button').click() })
 
@@ -220,7 +227,7 @@ describe('nightcity voice draft mirroring', () => {
     })
     const setDraft = vi.fn()
     const view = render(
-      <VoiceMicButton t={key => key} inputActions={{ setDraft }} {...({} as never)} />,
+      <LVoiceMicButton t={(key: string) => key} inputActions={{ setDraft }} />,
     )
     await act(async () => { view.getByRole('button').click() })
     act(() => { onresult?.(eventOf('冷启动')) })

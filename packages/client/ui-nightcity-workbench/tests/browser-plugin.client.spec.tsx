@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -8,6 +9,10 @@ import { apply, inject } from '../src/client/index.ts'
 import { WorkbenchView } from '../src/client/WorkbenchView.tsx'
 import { isTerminalCall, paneOf } from '../src/client/panes.ts'
 import { zh } from '../src/client/locales.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -74,6 +79,8 @@ function sessionOf(snapshot: { runningCalls?: { name: string }[]; running?: bool
   }
 }
 
+const LWorkbenchView = loose(WorkbenchView)
+
 describe('workbench pane derivation', () => {
   it('classifies terminal-family tool names', () => {
     expect(isTerminalCall('bash')).toBe(true)
@@ -119,7 +126,7 @@ describe('WorkbenchView', () => {
 
   it('auto-switches panes with the live turn', async () => {
     const session = sessionOf({})
-    const view = render(<WorkbenchView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LWorkbenchView t={t} useSession={session.useSession} />)
     expect(view.container.textContent).toContain(zh['pane.conversation.idle'])
 
     act(() => { session.set({ runningCalls: [{ name: 'bash' }], running: true }) })
@@ -132,7 +139,7 @@ describe('WorkbenchView', () => {
 
   it('keeps a manual pane pick until auto-switch is re-armed', async () => {
     const session = sessionOf({ running: true })
-    const view = render(<WorkbenchView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LWorkbenchView t={t} useSession={session.useSession} />)
     await act(async () => { view.getByText(zh['pane.trajectory']).click() })
     act(() => { session.set({ runningCalls: [{ name: 'bash' }] }) })
     expect(view.container.textContent).toContain(zh['pane.trajectory.idle'])
@@ -143,7 +150,7 @@ describe('WorkbenchView', () => {
 
   it('shows the queued-message count on the conversation pane', () => {
     const session = sessionOf({ queue: [{}, {}] })
-    const view = render(<WorkbenchView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LWorkbenchView t={t} useSession={session.useSession} />)
     expect(view.container.textContent).toContain('2')
   })
 })
@@ -166,7 +173,7 @@ describe('nightcity workbench coverage companions', () => {
   it('shows the idle execution readout on a manual execution pick', async () => {
     const session = sessionOf({})
     const t = (key: string): string => zh[key as keyof typeof zh] ?? key
-    const view = render(<WorkbenchView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LWorkbenchView t={t} useSession={session.useSession} />)
     await act(async () => { view.getByText(zh['pane.execution']).click() })
     expect(view.container.textContent).toContain(zh['pane.execution.idle'])
   })

@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -48,6 +49,14 @@ async function bench(declare = true) {
   return { ctx, slots, locale, declareHoles, disposeHoles }
 }
 
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
+
+const LTypewriterDock = loose(TypewriterDock)
+
+const LNightcityBrandMark = loose(NightcityBrandMark)
+
 describe('nightcity hero plugin', () => {
   beforeEach(() => {
     stubMatchMedia(false)
@@ -89,7 +98,7 @@ describe('nightcity hero plugin', () => {
   })
 
   it('renders the skyline mark at the requested size', () => {
-    const view = render(<NightcityBrandMark size={34} className="hero" />)
+    const view = render(<LNightcityBrandMark size={34} className="hero" />)
     const svg = view.container.querySelector('svg')
     expect(svg?.getAttribute('width')).toBe('34')
     expect(svg?.getAttribute('class')).toBe('hero')
@@ -131,7 +140,7 @@ describe('nightcity hero plugin', () => {
   it('types a suggestion line character by character, then advances', () => {
     vi.useFakeTimers()
     const t = (key: string): string => zh[key as keyof typeof zh]
-    const view = render(<TypewriterDock t={t} {...({} as never)} />)
+    const view = render(<LTypewriterDock t={t} />)
     const text = () => view.container.querySelectorAll('span')[1]?.textContent
 
     expect(text()).toBe('')
@@ -151,7 +160,7 @@ describe('nightcity hero plugin', () => {
   it('shows the full suggestion immediately under reduced motion', () => {
     stubMatchMedia(true)
     const t = (key: string): string => zh[key as keyof typeof zh]
-    const view = render(<TypewriterDock t={t} {...({} as never)} />)
+    const view = render(<LTypewriterDock t={t} />)
     expect(view.container.querySelectorAll('span')[1]?.textContent).toBe(zh['suggestion.0'])
   })
 })
@@ -202,7 +211,7 @@ describe('nightcity hero coverage companions', () => {
       removeEventListener: vi.fn(),
     }))
     const t = (key: string): string => zh[key as keyof typeof zh]
-    const view = render(<TypewriterDock t={t} {...({} as never)} />)
+    const view = render(<LTypewriterDock t={t} />)
     matches = true
     act(() => { notify?.() })
     expect(view.container.querySelectorAll('span')[1]?.textContent).toBe(zh['suggestion.0'])

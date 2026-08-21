@@ -2,14 +2,19 @@
 
 Nightcity workbench: one additive `conversation.view` tab whose central pane auto-switches with the live turn — the conversation pane while idle, the execution pane while a terminal-family tool call runs, the trajectory pane for any other in-flight tool activity. A manual pane pick suspends auto-switching until re-armed.
 
-## Model Experience
-
-No model-visible behavior. Pure client presentation; no token or KV-cache impact.
-
 ## How it mounts
 
 - `ctx.locale.register('nightcity-workbench', { zh, en })` owns the copy; the tab label binds through `ctx.locale.bind` so it follows the active locale.
 - A `conversation.view` entry (`nightcity-workbench`, order 5) reads `runningCalls`, `running`, and `queue` from the session snapshot via the standard `useSession` hook; pane derivation is a pure function (`src/client/panes.ts`).
+
+## Model Experience
+
+None, as the workbench derives its panes from already-logged session facts.
+
+#### KV Cache effect
+
+None; this package neither assembles nor sends a provider request.
+
 
 ## Known Limitations and Deferred Work
 

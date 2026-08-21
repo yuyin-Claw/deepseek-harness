@@ -17,14 +17,19 @@ Prompt the host agent with a topic and this protocol; it fans out pro, con, and 
 
 A side line updates the most recent round header; reports may split across messages.
 
-## Model Experience
-
-No model-visible behavior beyond the protocol above, which the user supplies in a prompt. The view is pure client presentation; no token or KV-cache impact.
-
 ## How it mounts
 
 - `ctx.locale.register('nightcity-debate', { zh, en })` owns the copy; the tab label binds through `ctx.locale.bind`.
 - A `conversation.view` entry (`nightcity-debate`, order 6) reads finalized assistant text blocks via the standard `useSession` hook and folds markers with a pure function.
+
+## Model Experience
+
+None, as the arena renders already-logged assistant text only.
+
+#### KV Cache effect
+
+None; this package neither assembles nor sends a provider request.
+
 
 ## Known Limitations and Deferred Work
 

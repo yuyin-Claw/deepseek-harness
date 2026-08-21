@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -8,6 +9,10 @@ import { apply, inject } from '../src/client/index.ts'
 import { DebateView } from '../src/client/DebateView.tsx'
 import { deriveDebate } from '../src/client/markers.ts'
 import { zh } from '../src/client/locales.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -42,6 +47,8 @@ async function bench(declare = true) {
   const disposeHoles = declare ? declareHoles() : undefined
   return { ctx, slots, locale, declareHoles, disposeHoles }
 }
+
+const LDebateView = loose(DebateView)
 
 describe('debate marker folding', () => {
   it('returns empty state for a plain transcript', () => {
@@ -127,7 +134,7 @@ describe('DebateView', () => {
 
   it('shows the empty state before any report', () => {
     const session = sessionOf([assistant('还没开始辩论')])
-    const view = render(<DebateView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LDebateView t={t} useSession={session.useSession} />)
     expect(view.container.textContent).toContain(zh['debate.empty.title'])
   })
 
@@ -135,7 +142,7 @@ describe('DebateView', () => {
     const session = sessionOf([
       assistant('辩题：夜之城是否宜居\n⚔️ 第 1 回合\n正方：霓虹永不熄灭\n反方：霓虹从不睡眠'),
     ])
-    const view = render(<DebateView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LDebateView t={t} useSession={session.useSession} />)
     expect(view.container.textContent).toContain('夜之城是否宜居')
     expect(view.container.textContent).toContain('霓虹永不熄灭')
     expect(view.container.textContent).toContain('霓虹从不睡眠')
@@ -146,7 +153,7 @@ describe('DebateView', () => {
       { kind: 'user', content: [] },
       { kind: 'assistant', blocks: [{ kind: 'reasoning', text: '⚔️ 第 9 回合' }] },
     ])
-    const view = render(<DebateView t={t} useSession={session.useSession} {...({} as never)} />)
+    const view = render(<LDebateView t={t} useSession={session.useSession} />)
     expect(view.container.textContent).toContain(zh['debate.empty.title'])
   })
 })
@@ -176,7 +183,7 @@ describe('nightcity debate coverage companions', () => {
       subscribe: () => () => {},
       getSnapshot: () => current,
     })
-    const view = render(<DebateView t={t} useSession={bound as never} {...({} as never)} />)
+    const view = render(<LDebateView t={t} useSession={bound as never} />)
     expect(view.container.textContent).toContain('孤军奋战')
     expect(view.container.textContent).toContain('—')
     expect(view.container.textContent).not.toContain(zh['debate.verdict'])
@@ -198,7 +205,7 @@ describe('nightcity debate rendering arms', () => {
       subscribe: () => () => {},
       getSnapshot: () => ({ nodes }),
     })
-    const view = render(<DebateView t={t} useSession={bound as never} {...({} as never)} />)
+    const view = render(<LDebateView t={t} useSession={bound as never} />)
     expect(view.container.textContent).toContain(zh['debate.verdict'])
     expect(view.container.textContent).toContain('侧翼包抄')
   })

@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
@@ -11,6 +12,10 @@ import { zh } from '../src/client/locales.ts'
 import {
   activePeakWindow, beijingMinutes, isOffPeakWindow,
 } from '../src/offpeak-settings.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -69,6 +74,8 @@ async function bench(enabled = false, declare = true) {
   return { ctx, slots, scope, locale, declareHoles, disposeHoles }
 }
 
+const LOffpeakRow = loose(OffpeakRow)
+
 describe('offpeak schedule model', () => {
   it('converts instants to Beijing minutes', () => {
     expect(beijingMinutes(new Date('2026-08-21T16:30:00Z'))).toBe(30)
@@ -112,11 +119,11 @@ describe('nightcity offpeak plugin', () => {
     const setEnabled = vi.fn()
     const t = (key: string): string => zh[key as keyof typeof zh]
     const view = render(
-      <OffpeakRow
+      <LOffpeakRow
         t={t}
         setEnabled={setEnabled}
         useStore={bindSnapshotSelector(store)}
-        {...({} as never)}
+
       />,
     )
     const control = view.getByRole('switch')
@@ -186,7 +193,7 @@ describe('nightcity offpeak adoption arms', () => {
     store.actions.sync(false, 0)
     const t = (key: string): string => zh[key as keyof typeof zh]
     const view = render(
-      <OffpeakRow t={t} setEnabled={() => {}} useStore={bindSnapshotSelector(store)} {...({} as never)} />,
+      <LOffpeakRow t={t} setEnabled={() => {}} useStore={bindSnapshotSelector(store)} />,
     )
     expect(view.container.textContent).not.toContain(zh['offpeak.status.running'])
   })

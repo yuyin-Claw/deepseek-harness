@@ -1,11 +1,16 @@
 // @vitest-environment jsdom
 import { Context } from '@deepseek-ai/cordis'
+import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
 import { apply, inject } from '../src/client/index.ts'
 import { PersonaPlate, moodOf } from '../src/client/PersonaPlate.tsx'
 import { zh } from '../src/client/locales.ts'
+
+/** Loose component wrapper: feeds partial props without widening the component's own props type. */
+type LooseComponent<P> = (props: P) => ReactElement | null
+const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 afterEach(() => {
   cleanup()
@@ -39,6 +44,8 @@ async function bench(declare = true) {
   return { ctx, slots, locale, declareHoles, disposeHoles }
 }
 
+const LPersonaPlate = loose(PersonaPlate)
+
 describe('nightcity persona plugin', () => {
   it('declares only the services it uses', () => {
     expect(inject).toEqual(['slots', 'locale'])
@@ -64,10 +71,10 @@ describe('nightcity persona plugin', () => {
 
   it('shows the netrunner while plain and the operator while submitting', () => {
     const t = (key: string): string => zh[key as keyof typeof zh]
-    const plain = render(<PersonaPlate t={t} input={{ phase: 'plain' }} {...({} as never)} />)
+    const plain = render(<LPersonaPlate t={t} input={{ phase: 'plain' }} />)
     expect(plain.container.textContent).toContain(zh['persona.netrunner.name'])
 
-    const busy = render(<PersonaPlate t={t} input={{ phase: 'submitting' }} {...({} as never)} />)
+    const busy = render(<LPersonaPlate t={t} input={{ phase: 'submitting' }} />)
     expect(busy.container.textContent).toContain(zh['persona.operator.name'])
   })
 })
