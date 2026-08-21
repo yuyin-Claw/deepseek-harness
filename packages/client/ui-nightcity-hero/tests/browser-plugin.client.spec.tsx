@@ -4,8 +4,10 @@ import { type ReactElement } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render, act } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
+import { bindSnapshotSelector } from '@deepseek-ai/dsh-client-test-runtime'
 import { apply, inject } from '../src/client/index.ts'
 import { TypewriterDock } from '../src/client/TypewriterDock.tsx'
+import { HeroBackdrop, heroPhaseActive } from '../src/client/HeroBackdrop.tsx'
 import { playBootChime } from '../src/client/chime.ts'
 import { zh } from '../src/client/locales.ts'
 
@@ -41,6 +43,7 @@ async function bench(declare = true) {
     name: 'root',
     children: {
       'conversation.input.dock': { kind: 'list', scope: 'session' },
+      'shell.overlay': { kind: 'list', scope: 'root' },
     },
   } as never, () => null)
   const disposeHoles = declare ? declareHoles() : undefined
@@ -52,6 +55,7 @@ type LooseComponent<P> = (props: P) => ReactElement | null
 const loose = <P,>(component: LooseComponent<P>) => component as unknown as (props: Record<string, unknown>) => ReactElement | null
 
 const LTypewriterDock = loose(TypewriterDock)
+const LHeroBackdrop = loose(HeroBackdrop)
 
 
 describe('nightcity hero plugin', () => {
@@ -78,10 +82,12 @@ describe('nightcity hero plugin', () => {
       { ns: 'nightcity-hero', dictionaries: { zh, en: expect.any(Object) } },
     ])
     expect(subject.slots.entries('conversation.input.dock').map(e => e.options.id)).toContain('nightcity-typewriter')
+    expect(subject.slots.entries('shell.overlay').map(e => e.options.id)).toContain('nightcity-hero-backdrop')
 
     await fiber.dispose()
     expect(subject.slots.entries('conversation.hero.brand.mark')).toHaveLength(0)
     expect(subject.slots.entries('conversation.input.dock').map(e => e.options.id)).not.toContain('nightcity-typewriter')
+    expect(subject.slots.entries('shell.overlay').map(e => e.options.id)).not.toContain('nightcity-hero-backdrop')
   })
 
   it('contributes when the holes are declared after apply', async () => {
@@ -228,5 +234,43 @@ describe('nightcity hero without matchMedia', () => {
     const t = (key: string): string => zh[key as keyof typeof zh]
     const view = render(<LTypewriterDock t={t} />)
     expect(view.container.querySelectorAll('span')[1]?.textContent).toBe(zh['suggestion.0'])
+  })
+})
+
+describe('nightcity hero backdrop', () => {
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+  })
+
+  function sessionsOf(first: { blank?: boolean } | undefined) {
+    let current = first
+    const source = {
+      subscribe: () => () => {},
+      getSnapshot: () => ({
+        current: current === undefined ? undefined : 's1',
+        byId: current === undefined ? {} : { s1: current },
+      }),
+    }
+    const bound = bindSnapshotSelector(source)
+    return { set: (next: { blank?: boolean } | undefined) => { current = next } , useSessions: bound as never }
+  }
+
+  it('renders the artwork only during the hero phase', () => {
+    const session = sessionsOf(undefined)
+    const view = render(<LHeroBackdrop useSessions={session.useSessions} />)
+    expect(view.container.querySelector('img')).not.toBeNull()
+
+    session.set({ blank: false })
+    // The selector reads a fresh snapshot each render; force a re-render.
+    const view2 = render(<LHeroBackdrop useSessions={sessionsOf({ blank: false }).useSessions} />)
+    expect(view2.container.querySelector('img')).toBeNull()
+  })
+
+  it('classifies the hero phase from a blank or absent session', () => {
+    expect(heroPhaseActive({ current: undefined, byId: {} })).toBe(true)
+    expect(heroPhaseActive({ current: 's1', byId: { s1: { blank: true } } })).toBe(true)
+    expect(heroPhaseActive({ current: 's1', byId: { s1: { blank: false } } })).toBe(false)
+    expect(heroPhaseActive({ current: 's1', byId: {} })).toBe(true)
   })
 })
