@@ -13,6 +13,12 @@
 
 .portrait {
   flex: none;
+  width: 26px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+  object-position: center 18%;
+  background: var(--dsw-alias-bg-layer-1);
 }
 
 .name {

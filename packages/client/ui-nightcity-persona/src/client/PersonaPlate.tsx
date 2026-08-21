@@ -1,12 +1,13 @@
 /**
  * Persona plate for the composer dock: a compact portrait plus nameplate
- * that follows the input phase. The portrait is an original SVG silhouette
- * placeholder; user-supplied CG artwork replaces it later without touching
- * the phase mapping.
+ * that follows the input phase. The user side renders the user-supplied CG
+ * portrait artwork (inlined); the operator side keeps an SVG placeholder on
+ * the same phase mapping.
  */
 import type { ReactElement } from 'react'
 import clsx from 'clsx'
 import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
+import { USER_PORTRAIT_DATA_URL } from './user-portrait.ts'
 import css from './PersonaPlate.module.css'
 
 /** Persona plate props: runtime share (InputZone owner) and the locale seat. */
@@ -35,7 +36,7 @@ export function PersonaPlate(props: PersonaPlateProps): ReactElement {
   const mood = moodOf(props.input?.phase)
   return (
     <p className={css.root} aria-live="off">
-      {mood === 'netrunner' ? <NetrunnerPortrait /> : <OperatorPortrait />}
+      {mood === 'netrunner' ? <UserPortrait /> : <OperatorPortrait />}
       <span className={clsx(css.name, mood === 'operator' && css.operator)}>
         {props.t(`persona.${mood}.name` as const)}
       </span>
@@ -44,14 +45,16 @@ export function PersonaPlate(props: PersonaPlateProps): ReactElement {
   )
 }
 
-/** Netrunner portrait: hooded silhouette, cyan visor. */
-function NetrunnerPortrait(): ReactElement {
+/** User portrait: the user-supplied CG artwork, cover-fit with the face kept near the top. */
+function UserPortrait(): ReactElement {
   return (
-    <svg className={css.portrait} width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" fill="#10283a" />
-      <path d="M6 19a6 6 0 0 1 12 0z" fill="#00f0ff" fillOpacity="0.8" />
-      <rect x="8" y="9" width="8" height="2" rx="1" fill="#00f0ff" />
-    </svg>
+    <img
+      className={css.portrait}
+      src={USER_PORTRAIT_DATA_URL}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+    />
   )
 }
 
