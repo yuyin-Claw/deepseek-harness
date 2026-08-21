@@ -4,6 +4,7 @@ import { type ReactElement } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import { SlotRegistry } from '@deepseek-ai/dsh-client-runtime/client'
+import { bindSnapshotSelector } from '@deepseek-ai/dsh-client-test-runtime'
 import { apply, inject } from '../src/client/index.ts'
 import { PersonaPlate, moodOf } from '../src/client/PersonaPlate.tsx'
 import { zh } from '../src/client/locales.ts'
@@ -61,27 +62,43 @@ describe('nightcity persona plugin', () => {
     expect(subject.slots.entries('conversation.composer.dock').map(e => e.options.id)).not.toContain('nightcity-persona')
   })
 
-  it('maps every input phase to a persona', () => {
+  it('maps turn facts to a persona', () => {
     expect(moodOf(undefined)).toBe('netrunner')
     expect(moodOf('plain')).toBe('netrunner')
     expect(moodOf('adjudicating')).toBe('operator')
     expect(moodOf('claimed')).toBe('operator')
     expect(moodOf('submitting')).toBe('operator')
+    // Subagent-family tool activity wins over the input phase.
+    expect(moodOf('plain', [{ name: 'subagent_fork' }])).toBe('subagent')
+    expect(moodOf('submitting', [{ name: 'web_search' }])).toBe('operator')
+    expect(moodOf('submitting', [{ name: 'subagent' }])).toBe('subagent')
   })
 
-  it('shows the netrunner while plain and the operator while submitting', () => {
+  it('shows the netrunner, operator, and subagent personas with their CG portraits', () => {
     const t = (key: string): string => zh[key as keyof typeof zh]
-    const plain = render(<LPersonaPlate t={t} input={{ phase: 'plain' }} />)
-    expect(plain.container.textContent).toContain(zh['persona.netrunner.name'])
-    // The user side renders the real CG portrait, cover-fit in the plate frame.
-    const userPortrait = plain.container.querySelector('img')
-    expect(userPortrait?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
-    expect(userPortrait?.getAttribute('aria-hidden')).toBe('true')
+    const stub = (running: { name: string }[]) => sessionsOf(running).useSession
 
-    const busy = render(<LPersonaPlate t={t} input={{ phase: 'submitting' }} />)
+    const plain = render(<LPersonaPlate t={t} input={{ phase: 'plain' }} useSession={stub([])} />)
+    expect(plain.container.textContent).toContain(zh['persona.netrunner.name'])
+    expect(plain.container.querySelector('img')?.getAttribute('aria-hidden')).toBe('true')
+
+    const busy = render(<LPersonaPlate t={t} input={{ phase: 'submitting' }} useSession={stub([])} />)
     expect(busy.container.textContent).toContain(zh['persona.operator.name'])
-    // The operator side renders its own supplied CG portrait.
-    const operatorPortrait = busy.container.querySelector('img')
-    expect(operatorPortrait?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
+    expect(busy.container.querySelector('img')?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
+
+    const crew = render(
+      <LPersonaPlate t={t} input={{ phase: 'plain' }} useSession={stub([{ name: 'subagent_fork' }])} />,
+    )
+    expect(crew.container.textContent).toContain(zh['persona.subagent.name'])
+    expect(crew.container.querySelector('img')?.getAttribute('src')).toMatch(/^data:image\/jpeg;base64,/)
   })
 })
+
+/** Session selector stub carrying a fixed running-call table. */
+function sessionsOf(running: { name: string }[]) {
+  const source = {
+    subscribe: () => () => {},
+    getSnapshot: () => ({ runningCalls: running }),
+  }
+  return { useSession: bindSnapshotSelector(source) as never }
+}
