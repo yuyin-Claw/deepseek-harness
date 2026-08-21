@@ -1,4 +1,8 @@
-/* Hero backdrop: full-bleed artwork shown only during the blank/hero phase. */
+/* Hero backdrop: the user artwork as an atmospheric wash during the
+   blank/hero phase. The shell overlay renders ABOVE every column, so the
+   image must stay visually subordinate: reduced opacity plus mask fades
+   over the sidebar (left) and the composer strip (bottom), keeping all UI
+   visible and legible underneath. */
 
 .root {
   position: fixed;
@@ -13,6 +17,15 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  opacity: 0.34;
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0 15%, #000 32% 82%, transparent 98%),
+    linear-gradient(0deg, transparent 0 16%, #000 34%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0 15%, #000 32% 82%, transparent 98%),
+    linear-gradient(0deg, transparent 0 16%, #000 34%);
+  mask-composite: intersect;
 }
 
 /* A soft vignette keeps the readout legible over the painted scene. */
@@ -20,5 +33,11 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 38%, transparent 0%, rgba(8, 5, 16, 0.35) 68%, rgba(8, 5, 16, 0.62) 100%);
+    radial-gradient(ellipse at 50% 38%, transparent 0%, rgba(8, 5, 16, 0.2) 68%, rgba(8, 5, 16, 0.42) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img {
+    opacity: 0.24;
+  }
 }
