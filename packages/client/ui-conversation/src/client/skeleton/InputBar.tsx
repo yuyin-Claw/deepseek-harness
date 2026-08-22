@@ -740,7 +740,7 @@ export function InputBar({
               value={draft}
               disabled={textareaDisabled}
               readOnly={machineBusy || workspaceTrigger}
-              aria-label={workspaceTrigger ? t('hero.chooseWorkspace') : undefined}
+              aria-label={workspaceTrigger ? t('hero.chooseWorkspace') : t('input.message')}
               aria-haspopup={workspaceTrigger ? 'menu' : undefined}
               aria-expanded={workspaceTrigger ? workspacePickerOpen : undefined}
               data-phase={input?.phase ?? 'inert'}

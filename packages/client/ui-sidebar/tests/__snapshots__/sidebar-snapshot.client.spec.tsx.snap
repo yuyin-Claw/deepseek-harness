@@ -36,6 +36,7 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
           </div>
         </span>
         <svg
+          aria-hidden="true"
           class="panelIcon"
           data-content="35f95b0c"
           fill="none"
@@ -52,6 +53,7 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
       type="button"
     >
       <svg
+        aria-hidden="true"
         data-content="c0ce4dcc"
         fill="none"
         height="18"
@@ -157,6 +159,7 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="panelIcon"
           data-content="35f95b0c"
           fill="none"
@@ -173,6 +176,7 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
       type="button"
     >
       <svg
+        aria-hidden="true"
         data-content="c0ce4dcc"
         fill="none"
         height="14"
@@ -283,6 +287,7 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
         type="button"
       >
         <svg
+          aria-hidden="true"
           class="panelIcon"
           data-content="35f95b0c"
           fill="none"
@@ -299,6 +304,7 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
       type="button"
     >
       <svg
+        aria-hidden="true"
         data-content="c0ce4dcc"
         fill="none"
         height="14"

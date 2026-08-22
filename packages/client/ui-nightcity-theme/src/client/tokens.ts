@@ -18,7 +18,7 @@ const NEON_MAGENTA = '#ff2bd6'
 const NEON_YELLOW = '#f5e663'
 const LABEL = '#e8e3ff'
 const LABEL_SECONDARY = '#a99cd6'
-const LABEL_DIMMED = '#6f5fa3'
+const LABEL_DIMMED = '#8b7bba'
 const CODE_BLOCK = '#120b22'
 
 /** Light neon palette: pale lavender surfaces, ink-violet text, deepened accents. */
@@ -33,7 +33,7 @@ const L_NEON_MAGENTA = '#b01791'
 const L_NEON_YELLOW = '#8a7a00'
 const L_LABEL = '#241a3a'
 const L_LABEL_SECONDARY = '#55447e'
-const L_LABEL_DIMMED = '#7d6ca8'
+const L_LABEL_DIMMED = '#63538e'
 const L_CODE_BLOCK = '#e6ddf6'
 
 /** Dark-mode value paired with a light-mode counterpart. */
