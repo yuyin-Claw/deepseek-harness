@@ -12,7 +12,7 @@ Status: implemented
 
 七个功能全部以新的 `packages/client/ui-nightcity-*` 包交付，只消费公开扩展点，经 `ctx.slots.inject` 与 `ctx.effect` 注册：
 
-- **theme** 叠加一层 scheme-invariant 的 `overrideTokens` 覆盖层，而不是注册可选主题 id。设置域采纳逻辑只会回退可选偏好，覆盖层不受影响；两种基础配色都收到同一组暗色霓虹值。氛围层（天际线、透视网格、四角 HUD、扫描线）是 `shell.overlay` 条目。
+- **theme** 叠加一层 scheme-invariant 的 `overrideTokens` 覆盖层，而不是注册可选主题 id。设置域采纳逻辑只会回退可选偏好，覆盖层不受影响；两种基础配色都收到同一组暗色霓虹值。装饰性氛围层（天际线、透视网格、四角 HUD、扫描线）原本是 `shell.overlay` 条目；后因产品反馈移除——其高饱和霓虹剪影在浅色调色板下呈显眼的彩色线条，如今该包只发布调色板覆盖，hero 保留独立的背景图。
 - **hero** 以优先级 −1 遮蔽 `conversation.hero.brand.mark`（低者优先渲染），在 `conversation.input.dock` 增加打字机建议读数，并用 Web Audio 合成启动音（无二进制素材）。
 - **persona** 挂在 `conversation.composer.dock`，把 InputZone 阶段映射为当前立绘。逐消息 CG 头像被否决：它需要上游未声明的聊天行座位，而新增该座位正是本版要避免的上游修改。
 - **voice** 是 `conversation.input.right` 的开关，通过标准 `inputActions.setDraft` 面追加 SpeechRecognition 的最终听写；API 缺失时渲染为空。
