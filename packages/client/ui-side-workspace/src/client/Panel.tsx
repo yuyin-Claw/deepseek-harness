@@ -1,12 +1,12 @@
 /**
  * Side workspace dock panel: a fixed right dock with three tabs — the forked
- * side conversation, per-file diffs, and read-only file browsing. Reads the
- * host API through the late-bound face exported by `src/client/index.ts`.
+ * side conversation, per-file diffs, and read-only file browsing. Pure props
+ * component; the registered inject face spreads the seven side-workspace
+ * remote methods into the props.
  */
 import type React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import classes from './Panel.module.css'
-import { sideWorkspaceApi } from './index.ts'
 
 /** One folded conversation message served by the host service. */
 export interface SideMessage {
@@ -65,9 +65,10 @@ const POLL_MS = 2000
 
 /**
  * The dock panel component.
+ * @param api - the seven side-workspace remote methods, spread into the props
+ * by the slot renderer from the registered inject face.
  */
-export function SideWorkspacePanel(): React.JSX.Element {
-  const api = sideWorkspaceApi()
+export function SideWorkspacePanel(api: SideWorkspaceInjected): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(false)
   const [tab, setTab] = useState<Tab>('chat')
   const [error, setError] = useState('')

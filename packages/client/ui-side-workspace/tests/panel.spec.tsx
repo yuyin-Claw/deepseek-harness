@@ -4,7 +4,6 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import React from 'react'
 import { SideWorkspacePanel, type SideWorkspaceInjected } from '../src/client/Panel.tsx'
-import { bindSideWorkspaceApi } from '../src/client/index.ts'
 
 ;(globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true
 
@@ -32,15 +31,13 @@ function makeStub(): { stub: SideWorkspaceInjected; sent: string[] } {
   return { stub, sent }
 }
 
-/** Render the panel with a stub face and return the container. */
+/** Render the panel with a stub inject face spread as props. */
 async function render(stub: SideWorkspaceInjected): Promise<HTMLDivElement> {
   const container = document.createElement('div')
   document.body.appendChild(container)
-  let root: Root | undefined
   await act(async () => {
-    root = createRoot(container)
-    bindSideWorkspaceApi(stub)
-    root.render(React.createElement(SideWorkspacePanel))
+    const root: Root = createRoot(container)
+    root.render(React.createElement(SideWorkspacePanel, stub))
   })
   return container
 }
