@@ -389,6 +389,20 @@
     # Consecutive-repeat reminders on the tool chain.
     - id: repeat-tool-reminder
       name: '@deepseek-ai/dsh-repeat-tool-reminder'
+
+    # Session-validated capabilities solidified from dynamic prototypes
+    # (2026-08-17): pre-execute deny rules, VCS model tools, and the side
+    # workspace host service for the browser panel.
+    - id: perm-rules
+      name: '@deepseek-ai/dsh-perm-rules'
+      config:
+        rules: []
+
+    - id: tool-vcs
+      name: '@deepseek-ai/dsh-tool-vcs'
+
+    - id: side-workspace
+      name: '@deepseek-ai/dsh-side-workspace'
       config:
         thresholds: [3, 5, 8]
         argumentsPreviewChars: 500

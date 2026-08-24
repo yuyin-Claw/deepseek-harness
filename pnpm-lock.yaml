@@ -1075,6 +1075,9 @@ importers:
       '@deepseek-ai/dsh-llm-retry':
         specifier: workspace:^
         version: link:../../llm/llm-retry
+      '@deepseek-ai/dsh-perm-rules':
+        specifier: workspace:^
+        version: link:../../guard/perm-rules
       '@deepseek-ai/dsh-permission-presets':
         specifier: workspace:^
         version: link:../../interaction/permission-presets
@@ -1123,6 +1126,9 @@ importers:
       '@deepseek-ai/dsh-shell-env':
         specifier: workspace:^
         version: link:../../shell/shell-env
+      '@deepseek-ai/dsh-side-workspace':
+        specifier: workspace:^
+        version: link:../../side/side-workspace
       '@deepseek-ai/dsh-skill':
         specifier: workspace:^
         version: link:../../skill/skill
@@ -1198,6 +1204,9 @@ importers:
       '@deepseek-ai/dsh-tool-todo':
         specifier: workspace:^
         version: link:../../todo/tool-todo
+      '@deepseek-ai/dsh-tool-vcs':
+        specifier: workspace:^
+        version: link:../../vcs/tool-vcs
       '@deepseek-ai/dsh-tool-web':
         specifier: workspace:^
         version: link:../../web/tool-web
@@ -1392,6 +1401,9 @@ importers:
       '@deepseek-ai/dsh-client-ui-settings-plugins':
         specifier: workspace:^
         version: link:../../client/ui-settings-plugins
+      '@deepseek-ai/dsh-client-ui-side-workspace':
+        specifier: workspace:^
+        version: link:../../client/ui-side-workspace
       '@deepseek-ai/dsh-client-ui-sidebar':
         specifier: workspace:^
         version: link:../../client/ui-sidebar
