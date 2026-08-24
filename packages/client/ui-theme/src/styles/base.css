@@ -13,3 +13,27 @@
   --ds-transition-duration-fast: 0.1s;
   --ds-transition-duration-slow: 0.3s;
 }
+
+/* Form controls inherit the UI type stack and size. Browsers otherwise render
+   buttons, inputs, selects, and textareas at their UA defaults (buttons at
+   13.33px with 1px border, not the 14px design size), producing the two-size
+   type seen across the shell before this reset existed. */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* Unified visible focus ring for keyboard users, riding the theme accent
+   rather than the browser's default blue outline. ``outline`` does not affect
+   layout, so the ring never shifts content; component-local ``:focus-visible``
+   rules (CSS Modules, higher specificity) still win where a surface needs its
+   own ring. */
+*:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: 2px;
+}

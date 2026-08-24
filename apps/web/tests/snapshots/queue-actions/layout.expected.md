@@ -8,6 +8,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - group "Command input": /goal Keep the composer context panels aligned
 - 'button "goal Goal created Status: active Objective: Keep the composer context panels aligned Rounds: 0/256 Activation: armed Commands: /goal edit <objective>, /goal pause, /goal clear"':
@@ -24,6 +26,7 @@
   - text: Context injection @deepseek-ai/dsh-system-prompt
 - paragraph: partial
 - status: Deep diving...
+- paragraph
 - region "To-dos":
   - button "To-dos 1 completed · 1 in progress"
 - img
@@ -39,7 +42,9 @@
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Stop generating"
+- paragraph: V Netrunner · standing by

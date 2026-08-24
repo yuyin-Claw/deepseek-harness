@@ -8,6 +8,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: Use the ask_user_question tool to ask me exactly one question with id "checkpoint", question "Ready to continue?", header "Checkpoint", and options labeled "Yes" and "No". After I answer, reply with one short sentence acknowledging my answer and stop. {{clock}}
 - button "Copy":
@@ -27,11 +29,14 @@
 - text: "Interjection: include the word ORANGE in your final reply."
 - button "Copy":
   - img
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Stop generating"
+- paragraph: V Netrunner · standing by

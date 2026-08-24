@@ -6,6 +6,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: Load the editing-cordis-compositions skill with the skill tool, then reply DONE. {{date}} {{clock}}
 - button "Copy":
@@ -41,12 +43,15 @@
 - button "Branch into a new conversation":
   - img
 - text: {{date}} {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 1 turns · 2 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 0% Input 280 tok · Output 30 tok

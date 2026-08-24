@@ -1,0 +1,25 @@
+/**
+ * Nightcity override stylesheet: both scheme values of every token, the
+ * light value on `body` and the dark value behind the base palette's
+ * `body[data-ds-dark-theme]` activation attribute — the exact selectors the
+ * shipped palettes use. Matching their scoping matters: a `:root` light
+ * block would lose to the base palette's body-scoped light values for every
+ * descendant, while `body` wins by document order in both schemes.
+ */
+import type { ThemeTokenOverrides } from '@deepseek-ai/dsh-client-ui-theme/client'
+
+/** The base palette's dark-scheme activation attribute selector. */
+const DARK_SELECTOR = 'body[data-ds-dark-theme]'
+
+/**
+ * Compose the override stylesheet text.
+ * @param tokens - token-name → per-scheme value pairs.
+ * @returns one stylesheet string carrying both schemes.
+ */
+export function nightcityStylesheet(tokens: ThemeTokenOverrides): string {
+  const declarations = (scheme: 'light' | 'dark'): string =>
+    Object.entries(tokens)
+      .map(([name, modes]) => `  ${name}: ${modes[scheme]};`)
+      .join('\n')
+  return `body {\n${declarations('light')}\n}\n${DARK_SELECTOR} {\n${declarations('dark')}\n}\n`
+}

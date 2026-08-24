@@ -8,6 +8,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: "Use only Cordis tools. First call cordis_inspect_self with no arguments. Then call cordis_define with plugin kind \"new\", idPrefix \"snap\", name \"snapshot noop\", purpose \"does nothing, for the snapshot\", code.host exactly \"return { name: \\\"snapshot-noop\\\", apply(ctx) {} }\" and code.client exactly \"return { inject: [\\\"slots\\\"], apply(ctx) { ctx.slots.register({ name: \\\"shell.overlay\\\", id: \\\"snapshot-probe\\\" }, () => React.createElement(\\\"div\\\", { \\\"data-snapshot-probe\\\": \\\"loaded\\\" })) } }\". Read its returned pluginId and packageId, then call cordis_run with those exact IDs and mode \"run\". After the run request returns, reply exactly CORDIS_UI_READY and stop. {{clock}}"
 - button "Copy":
@@ -92,13 +94,16 @@
 - button "Branch into a new conversation":
   - img
 - text: {{clock}} Ran for {{duration}}
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "0% of context used"
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 3 turns · 7 steps LLM {{duration}} · Tool call {{duration}} Cache hit 77% Input 66.5K tok · Output 321 tok

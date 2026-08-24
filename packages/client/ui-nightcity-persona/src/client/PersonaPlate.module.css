@@ -1,0 +1,35 @@
+/* Persona plate: consumes alias tokens for text, literal accents for art. */
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 4px 12px;
+  font-size: 12px;
+  min-height: 26px;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.portrait {
+  flex: none;
+  width: 26px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+  object-position: center 18%;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.name {
+  color: var(--dsw-alias-brand-primary);
+  font-weight: 600;
+}
+
+.name.operator {
+  color: var(--dsw-alias-markdown-tag);
+}
+
+.line {
+  color: var(--dsw-alias-label-tertiary);
+}

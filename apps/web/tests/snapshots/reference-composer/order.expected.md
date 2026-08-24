@@ -6,6 +6,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: Research notes what changed? Referenced session · Research notes {{clock}}
 - button "Copy":
@@ -13,11 +15,14 @@
 - button "Session recall Research notes":
   - img
   - text: Session recall Research notes
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by

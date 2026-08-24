@@ -6,6 +6,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: "Run two shell commands: wait for cancellation, then write skipped.txt. {{clock}}"
 - button "Copy":
@@ -22,12 +24,15 @@
 - 'button "Failed Bash Error: tool call aborted before dispatch"':
   - img
   - text: "Failed Bash Error: tool call aborted before dispatch"
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 1 turns · 1 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 0% Input 10 tok · Output 10 tok

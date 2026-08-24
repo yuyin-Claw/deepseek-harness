@@ -1,0 +1,126 @@
+/* VS debate arena: literal neon accents (no alias-token counterparts). */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  height: 100%;
+  overflow: auto;
+}
+
+.topic {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-primary);
+}
+
+.empty {
+  border: 1px dashed var(--dsw-alias-border-l);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.emptyHint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.versus {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.vs {
+  align-self: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f5e663;
+  text-shadow: 0 0 12px rgba(245, 230, 99, 0.5);
+}
+
+.card {
+  border: 1px solid var(--dsw-alias-border-l);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.cardPro {
+  border-color: rgba(0, 240, 255, 0.55);
+  box-shadow: inset 3px 0 0 #00f0ff;
+}
+
+.cardCon {
+  border-color: rgba(255, 43, 214, 0.55);
+  box-shadow: inset -3px 0 0 #ff2bd6;
+}
+
+.cardLabel {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.cardExcerpt {
+  margin: 0;
+  font-size: 13px;
+  color: var(--dsw-alias-label-primary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.rounds {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rounds li {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr;
+  gap: 8px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.roundNo {
+  color: #f5e663;
+}
+
+.roundPro {
+  color: #4df6ff;
+}
+
+.roundCon {
+  color: #ff7ae4;
+}
+
+.verdict {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(245, 230, 99, 0.6);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--dsw-alias-label-primary);
+  background: rgba(245, 230, 99, 0.06);
+}

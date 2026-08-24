@@ -1,0 +1,40 @@
+/* Typewriter suggestion readout. Colors are literal: the readout is a
+   nightcity-specific neon accent with no alias-token counterpart. */
+
+.root {
+  margin: 0;
+  padding: 4px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #a99cd6;
+  min-height: 30px;
+}
+
+.label {
+  color: #00f0ff;
+  margin-right: 8px;
+}
+
+.text {
+  color: #e8e3ff;
+}
+
+.caret {
+  display: inline-block;
+  width: 8px;
+  border-bottom: 2px solid #00f0ff;
+  margin-left: 2px;
+  animation: nc-caret-blink 0.9s step-end infinite;
+}
+
+@keyframes nc-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}

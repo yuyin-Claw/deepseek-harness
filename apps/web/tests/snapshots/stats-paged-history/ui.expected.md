@@ -6,6 +6,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: m1 7/25 {{clock}}
 - button "Copy":
@@ -346,12 +348,15 @@
 - text: 7/25 {{clock}} Ran for {{duration}}
 - button "Back to bottom":
   - img
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 28 turns · 28 steps LLM {{duration}}

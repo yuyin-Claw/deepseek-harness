@@ -43,3 +43,6 @@
   - button "Queue":
     - text: Queue
     - img
+  - heading "Off-peak execution" [level=4]
+  - switch "Off"
+  - paragraph: Hold new work through peak windows (Beijing 09–12 and 14–18); resume automatically off-peak

@@ -8,6 +8,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - group "Command input": /goal 做两个turn，每个turn输出随机一个包的文件结构。注意你做完一个turn之后，直接输出内容，停止，我们的系统会帮你再开一个turn，你看着做一个类似的
 - 'button "goal Goal created Status: active Objective: 做两个turn，每个turn输出随机一个包的文件结构。注意你做完一个turn之后，直接输出内容，停止，我们的系统会帮你再开一个turn，你看着做一个类似的 Rounds: 0/256 Activation: armed Commands: /goal edit <objective>, /goal pause, /goal clear"':
@@ -202,13 +204,16 @@
   - img
 - tooltip "Branch into a new conversation"
 - text: {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "9% of context used"
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 2 turns · 12 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 91% Input 113K tok · Output 2.4K tok

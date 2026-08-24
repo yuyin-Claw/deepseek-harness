@@ -8,6 +8,8 @@
     - img
   - tablist:
     - tab "Chat" [selected]
+    - tab "Workbench"
+    - tab "VS Debate"
     - tab "Trajectory"
 - text: "Using ONE run_code program: run bash `echo CODE_ROUND_OK`, then read the file missing.txt catching its error in the program. Return an object with both outcomes. Then reply DONE and stop. {{clock}}"
 - button "Copy":
@@ -43,13 +45,16 @@
 - button "Branch into a new conversation":
   - img
 - text: {{clock}} Ran for {{duration}} TTFT {{duration}} {{throughput}} tok/s
+- paragraph
 - textbox "Message the agent"
 - button "Commands":
   - img
 - 'button "Access mode, current: Workspace Write"': Workspace Write
+- button "Voice input"
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
 - button "7% of context used"
 - button "Send message" [disabled]
+- paragraph: V Netrunner · standing by
 - text: 1 turns · 2 steps LLM {{duration}} · Tool call {{duration}} TTFT avg {{duration}} · {{throughput}} tok/s Cache hit 52% Input 17.2K tok · Output 252 tok
