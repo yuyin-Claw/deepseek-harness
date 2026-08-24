@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-17-vcs-tools-repo-map-git-workflow.md
+2026-08-17-vcs-tools-repo-map-git-workflow.md: fac302487b5113e34697f8386e133549cd1847a4
+2026-08-17-vcs-tools-repo-map-git-workflow.zh.md: 6de9590cb351a0d0a57929beeab984aff25435e6
